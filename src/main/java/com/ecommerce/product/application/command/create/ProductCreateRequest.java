@@ -12,10 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductCreateRequest implements Request<Void> {
 
-    private Long id;
     private String name;
     private String description;
     private Double price;
     private String image;
-
 }
