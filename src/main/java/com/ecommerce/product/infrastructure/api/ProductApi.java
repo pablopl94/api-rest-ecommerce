@@ -1,19 +1,20 @@
 package com.ecommerce.product.infrastructure.api;
 
-import com.ecommerce.product.domain.entity.Product;
+import com.ecommerce.product.infrastructure.api.dto.ProductRequestDto;
+import com.ecommerce.product.infrastructure.api.dto.ProductResponseDto;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface ProductApi {
 
-    ResponseEntity<List<Product>> getAllProducts(String pageSize);
+    ResponseEntity<List<ProductResponseDto>> getAllProducts(String pageSize);
 
-    ResponseEntity<Product> getProductById(Long id);
+    ResponseEntity<ProductResponseDto> getProductById(Long id);
 
-    ResponseEntity<Void> insertProduct(Product product);
+    ResponseEntity<Void> insertProduct(ProductRequestDto productRequestDto);
 
-    ResponseEntity<Void> updateProduct(Product product);
+    ResponseEntity<ProductResponseDto> updateProduct(ProductRequestDto productRequestDto);
 
     ResponseEntity<Void> deleteProduct(Long id);
 
