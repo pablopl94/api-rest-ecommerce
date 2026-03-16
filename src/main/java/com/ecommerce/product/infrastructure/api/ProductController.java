@@ -11,6 +11,7 @@ import com.ecommerce.product.application.query.getOne.ProductGetOneResponse;
 import com.ecommerce.product.infrastructure.api.dto.ProductRequestDto;
 import com.ecommerce.product.infrastructure.api.dto.ProductResponseDto;
 import com.ecommerce.product.infrastructure.api.mapper.ProductMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,7 @@ public class ProductController implements ProductApi {
 
     @Override
     @PostMapping
-    public ResponseEntity<Void> insertProduct(@RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> insertProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
         ProductCreateRequest request = productMapper.mapRequestToCreate(productRequestDto);
         mediator.dispatch(request);
         return ResponseEntity.created(URI.create("/api/v1/products")).build();
@@ -54,7 +55,7 @@ public class ProductController implements ProductApi {
 
     @Override
     @PutMapping("{id}")
-    public ResponseEntity<Void> updateProduct(@RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> updateProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
         ProductUpdateRequest request = productMapper.mapRequestToUpdate(productRequestDto);
         mediator.dispatch(request);
         return ResponseEntity.noContent().build();
