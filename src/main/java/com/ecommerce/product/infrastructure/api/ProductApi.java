@@ -14,7 +14,7 @@ public interface ProductApi {
 
     ResponseEntity<Void> insertProduct(ProductRequestDto productRequestDto);
 
-    ResponseEntity<ProductResponseDto> updateProduct(ProductRequestDto productRequestDto);
+    ResponseEntity<Void> updateProduct(ProductRequestDto productRequestDto);
 
     ResponseEntity<Void> deleteProduct(Long id);
 
