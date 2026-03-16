@@ -2,6 +2,10 @@ package com.ecommerce.product.infrastructure.api;
 
 import com.ecommerce.common.mediator.Mediator;
 import com.ecommerce.product.application.command.create.ProductCreateRequest;
+import com.ecommerce.product.application.command.delete.ProductDeleteRequest;
+import com.ecommerce.product.application.command.update.ProductUpdateRequest;
+import com.ecommerce.product.application.query.getAll.ProductGetAllRequest;
+import com.ecommerce.product.application.query.getAll.ProductGetAllResponse;
 import com.ecommerce.product.application.query.getOne.ProductGetOneRequest;
 import com.ecommerce.product.application.query.getOne.ProductGetOneResponse;
 import com.ecommerce.product.infrastructure.api.dto.ProductRequestDto;
@@ -11,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -24,7 +29,11 @@ public class ProductController implements ProductApi {
     @Override
     @GetMapping()
     public ResponseEntity<List<ProductResponseDto>> getAllProducts(@RequestParam(required = false) String pageSize) {
-        return null;
+        ProductGetAllResponse products = mediator.dispatch(new ProductGetAllRequest());
+        List<ProductResponseDto> response = products.getProducts().stream()
+                .map(productMapper::mapProductToResponse)
+                .toList();
+        return ResponseEntity.ok(response);
     }
 
     @Override
@@ -40,18 +49,21 @@ public class ProductController implements ProductApi {
     public ResponseEntity<Void> insertProduct(@RequestBody ProductRequestDto productRequestDto) {
         ProductCreateRequest request = productMapper.mapRequestToCreate(productRequestDto);
         mediator.dispatch(request);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.created(URI.create("/api/v1/products")).build();
     }
 
     @Override
     @PutMapping()
     public ResponseEntity<ProductResponseDto> updateProduct(@RequestBody ProductRequestDto productRequestDto) {
-        return null;
+        ProductUpdateRequest request = productMapper.mapRequestToUpdate(productRequestDto);
+        mediator.dispatch(request);
+        return ResponseEntity.noContent().build();
     }
 
     @Override
     @DeleteMapping()
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        return null;
+        mediator.dispatch(new ProductDeleteRequest(id));
+        return ResponseEntity.noContent().build();
     }
 }

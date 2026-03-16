@@ -19,6 +19,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public void save(Product product) {
         ProductEntity productEntity = productEntityMapper.mapProductToEntity(product);
+        products.removeIf(p -> p.getId().equals(productEntity.getId()));
         products.add(productEntity);
     }
 
