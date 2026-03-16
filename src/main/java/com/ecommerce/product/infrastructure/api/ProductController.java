@@ -53,8 +53,8 @@ public class ProductController implements ProductApi {
     }
 
     @Override
-    @PutMapping()
-    public ResponseEntity<ProductResponseDto> updateProduct(@RequestBody ProductRequestDto productRequestDto) {
+    @PutMapping("{id}")
+    public ResponseEntity<Void> updateProduct(@RequestBody ProductRequestDto productRequestDto) {
         ProductUpdateRequest request = productMapper.mapRequestToUpdate(productRequestDto);
         mediator.dispatch(request);
         return ResponseEntity.noContent().build();
