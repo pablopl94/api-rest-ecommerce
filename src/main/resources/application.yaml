@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: ecommerce-api-rest
+  servlet:
+    multipart:
+      max-request-size: 10MB
+      max-file-size: 1MB
+app:
+  uploads:
+    products:
+      image-path: src/main/resources/static/uploads/products
