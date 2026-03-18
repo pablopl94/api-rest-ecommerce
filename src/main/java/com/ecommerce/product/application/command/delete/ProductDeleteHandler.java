@@ -1,7 +1,7 @@
 package com.ecommerce.product.application.command.delete;
 
 import com.ecommerce.common.mediator.RequestHandler;
-import com.ecommerce.product.infrastructure.database.ProductRepository;
+import com.ecommerce.product.domain.port.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

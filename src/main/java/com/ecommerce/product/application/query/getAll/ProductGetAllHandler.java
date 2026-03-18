@@ -2,7 +2,7 @@ package com.ecommerce.product.application.query.getAll;
 
 import com.ecommerce.common.mediator.RequestHandler;
 import com.ecommerce.product.domain.entity.Product;
-import com.ecommerce.product.infrastructure.database.ProductRepository;
+import com.ecommerce.product.domain.port.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
