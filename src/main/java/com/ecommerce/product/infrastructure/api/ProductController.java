@@ -13,8 +13,10 @@ import com.ecommerce.product.infrastructure.api.dto.ProductResponseDto;
 import com.ecommerce.product.infrastructure.api.mapper.ProductMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.util.List;
@@ -47,16 +49,22 @@ public class ProductController implements ProductApi {
 
     @Override
     @PostMapping
-    public ResponseEntity<Void> insertProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> insertProduct(
+            @RequestPart("data") @Valid ProductRequestDto productRequestDto,
+            @RequestPart(value = "image", required = false) MultipartFile file) {
         ProductCreateRequest request = productMapper.mapRequestToCreate(productRequestDto);
-        mediator.dispatch(request);
-        return ResponseEntity.created(URI.create("/api/v1/products")).build();
+        Long responseId = mediator.dispatch(request);
+        return ResponseEntity.created(URI.create("/api/v1/products/" + responseId)).build();
     }
 
     @Override
-    @PutMapping("{id}")
-    public ResponseEntity<Void> updateProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
+    @PutMapping(value = "{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateProduct(
+            @PathVariable Long id,
+            @RequestPart("data") @Valid ProductRequestDto productRequestDto,
+            @RequestPart(value = "image", required = false) MultipartFile file) {
         ProductUpdateRequest request = productMapper.mapRequestToUpdate(productRequestDto);
+        request.setId(id);
         mediator.dispatch(request);
         return ResponseEntity.noContent().build();
     }
