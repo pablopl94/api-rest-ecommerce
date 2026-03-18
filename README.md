@@ -137,11 +137,11 @@ ecommerce-api-rest/
 ### Capas de la Arquitectura Hexagonal
 
 ```
-🌐 Infrastructure Layer (API Controllers, Database)
+    Infrastructure Layer (API Controllers, Database)
            ↓
-🔧 Application Layer (Commands, Queries, Handlers)
+    Application Layer (Commands, Queries, Handlers)
            ↓
-💼 Domain Layer (Entities, Business Rules, Ports)
+    Domain Layer (Entities, Business Rules, Ports)
 ```
 
 **Flujo de una request típica:**
@@ -152,7 +152,7 @@ ecommerce-api-rest/
 4. **Domain** ejecuta las reglas de negocio
 5. **Infrastructure** persiste o consulta datos
 
-## 📚 Funcionalidades del Módulo de Productos
+## Funcionalidades del Módulo de Productos
 
 ### Operaciones Implementadas (CRUD Completo)
 
@@ -173,7 +173,7 @@ ecommerce-api-rest/
 - **DTOs de salida** - Mapeo automático con MapStruct
 - **Manejo de errores** - Respuestas consistentes y descriptivas
 
-## 🚀 Configuración y Ejecución del Proyecto
+## Configuración y Ejecución del Proyecto
 
 ### Requisitos para Practicar
 
