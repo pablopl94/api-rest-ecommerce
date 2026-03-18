@@ -1,4 +1,4 @@
-package com.ecommerce.product.infrastructure.database;
+package com.ecommerce.product.domain.port;
 
 import com.ecommerce.product.domain.entity.Product;
 

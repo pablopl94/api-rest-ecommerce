@@ -1,6 +1,7 @@
 package com.ecommerce.product.infrastructure.database;
 
 import com.ecommerce.product.domain.entity.Product;
+import com.ecommerce.product.domain.port.ProductRepository;
 import com.ecommerce.product.infrastructure.database.entity.ProductEntity;
 import com.ecommerce.product.infrastructure.database.mapper.ProductEntityMapper;
 import lombok.RequiredArgsConstructor;
