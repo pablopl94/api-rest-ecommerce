@@ -1,8 +1,9 @@
 package com.ecommerce.product.application.command.create;
 
 import com.ecommerce.common.mediator.RequestHandler;
+import com.ecommerce.common.util.FileUtils;
 import com.ecommerce.product.domain.entity.Product;
-import com.ecommerce.product.infrastructure.database.ProductRepository;
+import com.ecommerce.product.domain.port.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,23 +11,26 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ProductCreateHandler implements RequestHandler<ProductCreateRequest, Void> {
+public class ProductCreateHandler implements RequestHandler<ProductCreateRequest, Long> {
 
     private final ProductRepository productRepository;
+    private final FileUtils fileUtils;
 
     @Override
-    public Void handle(ProductCreateRequest request) {
+    public Long handle(ProductCreateRequest request) {
+
+        String uniqueFileName = fileUtils.handleProductImage(request.getImage(), null);
 
         Product product = Product.builder()
                 .id(UUID.randomUUID().getMostSignificantBits())
                 .name(request.getName())
                 .description(request.getDescription())
-                .image(request.getImage())
+                .image(uniqueFileName)
                 .build();
 
         productRepository.save(product);
 
-        return null;
+        return product.getId();
     }
 
     //Define la clase del tipo de entrada

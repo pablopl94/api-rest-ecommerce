@@ -1,14 +1,15 @@
 package com.ecommerce.product.application.command.update;
 
 import com.ecommerce.common.mediator.Request;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor
 public class ProductUpdateRequest implements Request<Void> {
 
@@ -16,6 +17,6 @@ public class ProductUpdateRequest implements Request<Void> {
     private String name;
     private String description;
     private Double price;
-    private String image;
+    private MultipartFile image;
 
 }

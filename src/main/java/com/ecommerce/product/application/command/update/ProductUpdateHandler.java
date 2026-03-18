@@ -1,8 +1,10 @@
 package com.ecommerce.product.application.command.update;
 
 import com.ecommerce.common.mediator.RequestHandler;
+import com.ecommerce.common.util.FileUtils;
 import com.ecommerce.product.domain.entity.Product;
-import com.ecommerce.product.infrastructure.database.ProductRepository;
+import com.ecommerce.product.domain.exception.ProductNotFoundException;
+import com.ecommerce.product.domain.port.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,16 +13,21 @@ import org.springframework.stereotype.Service;
 public class ProductUpdateHandler implements RequestHandler<ProductUpdateRequest, Void> {
 
     private final ProductRepository productRepository;
+    private final FileUtils fileUtils;
 
     @Override
     public Void handle(ProductUpdateRequest request) {
 
-        Product product = Product.builder()
-                .id(request.getId())
-                .name(request.getName())
-                .description(request.getDescription())
-                .image(request.getImage())
-                .build();
+        Product product = productRepository.findById(request.getId())
+                .orElseThrow(() -> new ProductNotFoundException(request.getId()));
+
+        String uniqueFilename = product.getImage();
+
+
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setImage(uniqueFilename);
 
         productRepository.save(product);
 
