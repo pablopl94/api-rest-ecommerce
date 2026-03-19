@@ -13,6 +13,7 @@ import com.ecommerce.product.infrastructure.api.dto.ProductResponseDto;
 import com.ecommerce.product.infrastructure.api.mapper.ProductMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/products")
+@Slf4j
 public class ProductController implements ProductApi {
 
     private final Mediator mediator;
@@ -32,18 +34,22 @@ public class ProductController implements ProductApi {
     @Override
     @GetMapping()
     public ResponseEntity<List<ProductResponseDto>> getAllProducts(@RequestParam(required = false) String pageSize) {
+        log.info("Getting all products");
         ProductGetAllResponse products = mediator.dispatch(new ProductGetAllRequest());
         List<ProductResponseDto> response = products.getProducts().stream()
                 .map(productMapper::mapProductToResponse)
                 .toList();
+        log.info("Found {} products", response.size());
         return ResponseEntity.ok(response);
     }
 
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponseDto> getProductById(@PathVariable Long id) {
+        log.info("Getting product with id {}", id);
         ProductGetOneResponse product = mediator.dispatch(new ProductGetOneRequest(id));
         ProductResponseDto response = productMapper.mapProductToResponse(product.getProduct());
+        log.info("Found product with id {}", id);
         return ResponseEntity.ok(response);
     }
 
@@ -52,8 +58,10 @@ public class ProductController implements ProductApi {
     public ResponseEntity<Void> insertProduct(
             @RequestPart("data") @Valid ProductRequestDto productRequestDto,
             @RequestPart(value = "image", required = false) MultipartFile file) {
+        log.info("Saving new Product");
         ProductCreateRequest request = productMapper.mapRequestToCreate(productRequestDto);
         Long responseId = mediator.dispatch(request);
+        log.info("Saved product with id {}", responseId);
         return ResponseEntity.created(URI.create("/api/v1/products/" + responseId)).build();
     }
 
@@ -64,15 +72,19 @@ public class ProductController implements ProductApi {
             @RequestPart("data") @Valid ProductRequestDto productRequestDto,
             @RequestPart(value = "image", required = false) MultipartFile file) {
         ProductUpdateRequest request = productMapper.mapRequestToUpdate(productRequestDto);
+        log.info("Update product with id {}", id);
         request.setId(id);
         mediator.dispatch(request);
+        log.info("Updated product with id {}", id);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @DeleteMapping()
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        log.info("Deleting product with id {}", id);
         mediator.dispatchAsync(new ProductDeleteRequest(id));
+        log.info("Deleted product with id {}", id);
         return ResponseEntity.accepted().build();
     }
 }
