@@ -2,4 +2,4 @@ spring:
   devtools:
     restart:
       exclude:
-        resources/static/uploads/**
+        - uploads/**
