@@ -1,5 +1,6 @@
 package com.ecommerce.common.mediator;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,5 +23,14 @@ public class Mediator {
             throw new RuntimeException("No handle found for request type" + request.getClass());
         }
         return handler.handle(request);
+    }
+
+    @Async
+    public <T extends Request<R>, R> void dispatchAsync(T request) {
+        RequestHandler<T, R> handler = (RequestHandler<T, R>) requestHandlerMap.get(request.getClass());
+        if (handler == null) {
+            throw new RuntimeException("No handle found for request type" + request.getClass());
+        }
+        handler.handle(request);
     }
 }
