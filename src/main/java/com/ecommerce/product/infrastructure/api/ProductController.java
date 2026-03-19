@@ -72,7 +72,7 @@ public class ProductController implements ProductApi {
     @Override
     @DeleteMapping()
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        mediator.dispatch(new ProductDeleteRequest(id));
-        return ResponseEntity.noContent().build();
+        mediator.dispatchAsync(new ProductDeleteRequest(id));
+        return ResponseEntity.accepted().build();
     }
 }
