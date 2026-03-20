@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.util.List;
@@ -49,22 +48,18 @@ public class ProductController implements ProductApi {
 
     @Override
     @PostMapping
-    public ResponseEntity<Void> insertProduct(
-            @RequestPart("data") @Valid ProductRequestDto productRequestDto,
-            @RequestPart(value = "image", required = false) MultipartFile file) {
+    public ResponseEntity<Void> insertProduct(@ModelAttribute @Valid ProductRequestDto productRequestDto) {
         ProductCreateRequest request = productMapper.mapRequestToCreate(productRequestDto);
         Long responseId = mediator.dispatch(request);
         return ResponseEntity.created(URI.create("/api/v1/products/" + responseId)).build();
     }
 
     @Override
-    @PutMapping(value = "{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateProduct(
             @PathVariable Long id,
-            @RequestPart("data") @Valid ProductRequestDto productRequestDto,
-            @RequestPart(value = "image", required = false) MultipartFile file) {
-        ProductUpdateRequest request = productMapper.mapRequestToUpdate(productRequestDto);
-        request.setId(id);
+            @ModelAttribute @Valid ProductRequestDto productRequestDto) {
+        ProductUpdateRequest request = productMapper.mapRequestToUpdate(id, productRequestDto);
         mediator.dispatch(request);
         return ResponseEntity.noContent().build();
     }
@@ -72,7 +67,7 @@ public class ProductController implements ProductApi {
     @Override
     @DeleteMapping()
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        mediator.dispatch(new ProductDeleteRequest(id));
-        return ResponseEntity.noContent().build();
+        mediator.dispatchAsync(new ProductDeleteRequest(id));
+        return ResponseEntity.accepted().build();
     }
 }

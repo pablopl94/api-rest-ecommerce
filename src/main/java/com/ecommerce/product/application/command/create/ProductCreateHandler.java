@@ -5,12 +5,12 @@ import com.ecommerce.common.util.FileUtils;
 import com.ecommerce.product.domain.entity.Product;
 import com.ecommerce.product.domain.port.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductCreateHandler implements RequestHandler<ProductCreateRequest, Long> {
 
     private final ProductRepository productRepository;
@@ -18,18 +18,20 @@ public class ProductCreateHandler implements RequestHandler<ProductCreateRequest
 
     @Override
     public Long handle(ProductCreateRequest request) {
+        log.info("Saving new Product");
 
         String uniqueFileName = fileUtils.handleProductImage(request.getImage(), null);
 
         Product product = Product.builder()
-                .id(UUID.randomUUID().getMostSignificantBits())
                 .name(request.getName())
                 .description(request.getDescription())
+                .price(request.getPrice())
                 .image(uniqueFileName)
                 .build();
 
         productRepository.save(product);
 
+        log.info("Saved product with id {}", product.getId());
         return product.getId();
     }
 
